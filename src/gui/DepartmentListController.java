@@ -49,7 +49,8 @@ public class DepartmentListController implements Initializable
 	private void onActionBtnNew(ActionEvent event)
 	{
 		Stage parentStage = Utils.currentStage(event);
-		createDialogForm("/gui/DepartmentForm.fxml", parentStage);
+		Department obj = new Department();
+		createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage);
 	}
 	
 	// Injeção da dependência na classe
@@ -88,12 +89,16 @@ public class DepartmentListController implements Initializable
 	}
 	
 	// Método para carregar o formulário departamento na forma modal
-	private void createDialogForm(String absoluteName, Stage parentStage)
+	private void createDialogForm(Department obj, String absoluteName, Stage parentStage)
 	{
 		try
 		{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
+			
+			DepartmentFormController controller = loader.getController();
+			controller.setDepartment(obj);
+			controller.updateFormData();
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Digite o nome do departamento!");
