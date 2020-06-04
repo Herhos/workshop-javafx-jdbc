@@ -126,6 +126,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		}
 		catch (IOException e)
 		{
+			e.printStackTrace();
 			Alerts.showAlert("IO Exception", "Erro ao carregar a tela!", e.getMessage(), AlertType.ERROR);
 		}
 	}
