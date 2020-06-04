@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -143,6 +145,31 @@ public class SellerFormController implements Initializable
 		
 		obj.setName(txtName.getText());
 		
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals(""))
+		{
+			exception.addError("email", " Campo vazio! Preecha-o!");
+		}
+		
+		obj.setEmail(txtEmail.getText());
+		
+		if (dpkBirthDate == null)
+		{
+			exception.addError("birthDate", " Campo vazio! Preecha-o!");
+		}
+		else
+		{
+			Instant instant = Instant.from(dpkBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+			obj.setBirthDate(Date.from(instant));
+		}		
+		
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals(""))
+		{
+			exception.addError("baseSalary", " Campo vazio! Preecha-o!");
+		}
+		obj.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
+		
+		obj.setDepartment(cboDepartment.getValue());
+		
 		if (exception.getErrors().size() > 0)
 		{
 			throw exception;
@@ -218,10 +245,11 @@ public class SellerFormController implements Initializable
 	{
 		Set<String> fields = errors.keySet();
 		
-		if (fields.contains("name"))
-		{
-			lblErrorName.setText(errors.get("name"));
-		}
+		// Operadores ternários para substituir os if/else.
+		lblErrorName.setText((fields.contains("name")) ? errors.get("name") : "");
+		lblErrorEmail.setText((fields.contains("email")) ? errors.get("email") : "");
+		lblErrorBirthDate.setText((fields.contains("birthDate")) ? errors.get("birthDate") : "");
+		lblErrorBaseSalary.setText((fields.contains("baseSalary")) ? errors.get("baseSalary") : "");		
 	}
 	
 	private void initializeComboBoxDepartment()
