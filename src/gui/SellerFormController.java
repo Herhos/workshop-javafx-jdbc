@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Seller;
@@ -37,7 +41,19 @@ public class SellerFormController implements Initializable
 	@FXML
 	private TextField txtName;
 	@FXML
+	private TextField txtEmail;
+	@FXML
+	private DatePicker dpkBirthDate;
+	@FXML
+	private TextField txtBaseSalary;
+	@FXML
 	private Label lblErrorName;
+	@FXML
+	private Label lblErrorEmail;
+	@FXML
+	private Label lblErrorBirthDate;
+	@FXML
+	private Label lblErrorBaseSalary;
 	@FXML
 	private Button btnSalve;
 	@FXML
@@ -135,7 +151,10 @@ public class SellerFormController implements Initializable
 	public void initializeNodes()
 	{
 		Constraints.setTextFieldInteger(txtId);
-		Constraints.setTextFieldMaxLengtht(txtName, 35);
+		Constraints.setTextFieldMaxLengtht(txtName, 70);
+		Constraints.setTextFieldMaxLengtht(txtEmail, 70);
+		Constraints.setTextFieldDouble(txtBaseSalary);
+		Utils.formatDatePicker(dpkBirthDate, "dd/MM/yyyy");
 	}
 	
 	public void updateFormData()
@@ -148,6 +167,13 @@ public class SellerFormController implements Initializable
 		// valueOf converte string capturada pelo getId em inteiro
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
+		txtEmail.setText(entity.getEmail());
+		if (entity.getBirthDate() != null)
+		{
+			dpkBirthDate.setValue(LocalDateTime.ofInstant(entity.getBirthDate().toInstant(), ZoneId.systemDefault()).toLocalDate());			
+		}
+		Locale.setDefault(Locale.US);
+		txtBaseSalary.setText(String.format("%.2f", entity.getBaseSalary()));
 	}
 	
 	private void setErrorMessages(Map<String, String> errors)
